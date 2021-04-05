@@ -1,5 +1,5 @@
 <h3 align="center">Control Youtube</h3>
-
+<p>This is an application developed with the intent of receiving videos from the Youtube Data API and showing according to the total minutes reported by the user on each day of the week.</p>
 <p align="center">
   Follow the documentation to run locally
 </p>

@@ -39,6 +39,8 @@
     <main>
       <div class="album py-5 bg-light h-100">
         <div class="container">
+          <h6 class="info qtd-videos"></h6>
+          <h6 class="info time-total"></h6>
           <div class="row row-cols-1 g-3 mt-3">
             
           </div>
@@ -140,6 +142,6 @@
     <script src="https://apis.google.com/js/api.js"></script>
     <script type="text/javascript" src="<?php echo $url; ?>/assets/js/youtube_api/api.js"></script>
     <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=loadClient"></script>
-    <script type="text/javascript" src="<?php echo $url; ?>/assets/js/videos/videos.js"></script>
+    <script type="text/javascript" src="<?php echo $url; ?>/assets/js/home/home.js"></script>
   </body>
 </html>

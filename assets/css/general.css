@@ -37,6 +37,14 @@ form input{
   border-radius: 50px !important;
 }
 
+.info{
+  display: inline;
+}
+
+.info.time-total{
+  float: right;
+}
+
 #input-search{
   height: 40px !important;
   border-radius: 50px 0 0 50px !important;

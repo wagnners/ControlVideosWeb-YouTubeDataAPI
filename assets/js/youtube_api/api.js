@@ -1,3 +1,4 @@
+// HTML video content assembly
 function showVideo(video, video_content){
 
 	video_content.find('.card img').attr("src", video.snippet.thumbnails.medium.url);
@@ -17,12 +18,18 @@ function showVideo(video, video_content){
 
 }
 
+// Show all vídeos, count and duration total in html
+function showAllVideos(videos, milliseconds){
 
-function showAllVideos(videos){
-
+	var time = moment.duration(milliseconds);
+	
+	$('.info.qtd-videos').html(videos.length + " resultados");
+	$('.info.time-total').html(time.hours() + ":" + time.minutes() + ":" + time.seconds())
+	
 	var video_content = $('.tamplete.video .video-content').clone();
 	video_content.find(".alert").remove();
 	video_content.find(".card").removeClass("d-none");
+
 
 	videos.forEach(video => {
 
@@ -32,7 +39,9 @@ function showAllVideos(videos){
 
 }
 
+// Show vídeos per day in html
 function showVideosPerDay(video){
+
 	
 	var video_content = $('.tamplete.video .video-content').clone();
 	video_content.find(".alert").remove();
@@ -43,6 +52,7 @@ function showVideosPerDay(video){
 
 }
 
+// Get the name of day 
 function getDayStr(day){
 
 	switch(day){
@@ -71,11 +81,22 @@ function getDayStr(day){
 
 }
 
+// Print the name of the day (ex: Sexta-Feita) passing index to getDayStr function.
+function showDay(duration, key){
+	$('.container .row.row-cols-1').append("<div class='col day'><h4>"+getDayStr(key)+"</h4></div>");
+	$( "<div class='col'><small>"+duration.value+" minutos</small></div>" ).insertAfter( ".container .row.row-cols-1 .day:last" );
+}
 
+// This function will go through all marked days.
+// If video has duration shorter than the one marked on the day, his video will be shown and deleted from the array so that it will not be visited in the next interactions
+// if this function don't find the video for sometime, it will show an alert message
+// Finally, this function show the time and the count of the videos
 function calcVideosPerDay(videos){
 
 	var durationPerDays 	= $(".form-durations").serializeArray();	
 	var hadDurationInput 	= false;
+	var totalVideos			= 0;
+	var totalMil			= 0;
 	
 	durationPerDays.forEach((duration, key) => {
 		
@@ -87,14 +108,19 @@ function calcVideosPerDay(videos){
 			hadDurationInput 		= true;
 			var milliseconds_input 	= duration.value * 60 * 1000;
 
-			$('.container .row.row-cols-1').append("<div class='col day'><h4>"+getDayStr(key)+"</h4></div>");
-			$( "<div class='col'><small>"+duration.value+" minutos</small></div>" ).insertAfter( ".container .row.row-cols-1 .day:last" );
+			showDay(duration, key);
 
 			var find = false;
 
 			for (var i = 0; i < videosToCheck.length; i++) {
 				if(videosToCheck[i].millisecondsDuration <= milliseconds_input){
+
 					find = true;
+
+					totalVideos++;
+					totalMil += videosToCheck[i].millisecondsDuration;
+
+					
 					milliseconds_input -= videosToCheck[i].millisecondsDuration;
 					showVideosPerDay(videosToCheck[i]);
 					videos.splice(i+countRemoved,1);
@@ -109,17 +135,26 @@ function calcVideosPerDay(videos){
 
 	});
 
+
+	var time = moment.duration(totalMil),
+	hours = time.hours() < 10 ? `0${time.hours()}` : time.hours(),
+	minutes = time.minutes() < 10 ? `0${time.minutes()}` : time.minutes(),
+	seconds = time.seconds() < 10 ? `0${time.seconds()}` : time.seconds();
+
+	$('.info.qtd-videos').html(totalVideos + " resultados");
+	$('.info.time-total').html(`${hours}:${minutes}:${seconds}`)
+
 	return hadDurationInput;
 
 }
 
+// This function will get videos details from Youtube API (duration, tags, total duration);
 function getVideosDetails(results){
 
 	var milliseconds 	= 0;
-	var videos 			= [];
 
 	return new Promise((resolve, reject) => {
-		results.forEach( (video, i) => {
+		results.forEach( (video, index, array) => {
 			return gapi.client.youtube.videos.list({
 		      "part": [
 		        "contentDetails",
@@ -132,32 +167,22 @@ function getVideosDetails(results){
 
 		    	video.contentDetails 		= response.result.items[0].contentDetails;
 		    	video.snippet 		 		= response.result.items[0].snippet;
-
-		    	videos.push(video);
-
 		        _milliseconds 				= moment.duration(response.result.items[0].contentDetails.duration, moment.ISO_8601);
 		        video.millisecondsDuration	= _milliseconds._milliseconds;
-		        milliseconds  += _milliseconds._milliseconds;
 
-		         if(Object.is(results.length - 1, i)){
-                    resolve({ status: 'finished', videos})
-                }
+		       	milliseconds  += _milliseconds._milliseconds;
+
+				 if (Object.is(results.length - 1, index)) {
+                    resolve({ status: 'finished', videos: results})
+			      }
+		     
 		     },
 		    function(err) { console.error("Execute error", err); });
 		})
 	}).then(result => {
-
-		var seconds = Math.floor(milliseconds / 1000),
-	    minute = Math.floor(seconds / 60),
-	    seconds = seconds % 60,
-	    hour = Math.floor(minute / 60),
-	    minute = minute % 60,
-	    day = Math.floor(hour / 24),
-	    hour = hour % 24,
-	    max_min = Math.floor((milliseconds/1000/60) << 0);
-
+		// If the return has no scheduled days, show all videos
 	    if(!calcVideosPerDay(result.videos))
-	    	showAllVideos(result.videos)
+	    	showAllVideos(result.videos, milliseconds)
 
 	    $('#loader-content').hide();
 		$('main').show();
@@ -165,7 +190,7 @@ function getVideosDetails(results){
 	});
 
 }
-
+// Getting videos from API 
 const youtubeAPIsearch = async (nextPage = null) => {
 	return new Promise((resolve, reject) => {
 		return gapi.client.youtube.search.list({
@@ -183,17 +208,20 @@ const youtubeAPIsearch = async (nextPage = null) => {
 	});
 }
 
+//If the result has a next page, take the next page until the result is less than 151. 
 function getOtherResults(result, videos = null){
 
 	videos = videos ? videos : result.items;
 
 	youtubeAPIsearch(result.nextPageToken).then(response => {
 
-		videos = videos.concat(response.result.items);   	
-	   		 //If your operation succeeds, resolve the promise and don't call again.
+		videos = videos.concat(response.result.items);   
+
+	  	//In this case, the loop will not pass the 200 results because it returns a max of 50 videos
 	    if (result.nextPageToken && videos.length < 151) {
 	        getOtherResults(response.result, videos); //Try again
 	    } else {
+
 	        getVideosDetails(videos)
 	    };
 
@@ -201,27 +229,26 @@ function getOtherResults(result, videos = null){
 
 }
 
+
+// This function will get results from API. If it has more than 50 results, it will get others results, otherwise, it will get details from videos (duration, tags)
 function getYoutubeResults(){
 
 	youtubeAPIsearch().then(response => {
     	if(response.result.pageInfo.totalResults > 50){
     		getOtherResults(response.result);
     	}else{
-    	
        		getVideosDetails(response.result.items);
     	}
 	});
 }
 
-
+// Getting access to Youtube Data API
 function loadClient() {
 	// gapi.client.setApiKey("AIzaSyBk0_7EcAVZJ3UtmFt5JJrOSoTWH7hcR2I");
-	gapi.client.setApiKey("AIzaSyDl7WvKvjOfd7B_gJ_EzV1qIyZ096D8Q3o");
+	gapi.client.setApiKey("AIzaSyC3fYhwuW1dmT2sjFOWXtnHITLRnvzTdZg");
 	return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/youtube/v3/rest")
 	    .then(function() { getYoutubeResults() },
 	        function(err) { console.error("Error loading GAPI client for API", err); });
 }
-
-// Make sure the client is loaded before calling this method.
 
 

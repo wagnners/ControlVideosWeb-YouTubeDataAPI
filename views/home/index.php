@@ -84,6 +84,6 @@
     <script type="text/javascript" src="<?php echo $url; ?>/assets/libs/bootstrap/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script type="text/javascript" src="<?php echo $url; ?>/assets/js/videos/videos.js"></script>
+    <script type="text/javascript" src="<?php echo $url; ?>/assets/js/home/home.js"></script>
   </body>
 </html>
