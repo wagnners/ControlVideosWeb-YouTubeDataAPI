@@ -122,7 +122,7 @@
                     </div>
                   </div>
                    <div class="col">
-                      <button type="button" class="btn btn-danger btn-block"><i class="fa fa-search" aria-hidden="true"></i></button>
+                      <button type="button" class="btn btn-danger btn-block btn-search"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </div>
                 </div>
               </form>
