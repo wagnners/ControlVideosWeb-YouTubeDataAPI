@@ -1,0 +1,193 @@
+html, body, main {
+ height: 100%
+}
+
+.navbar{
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  background-color: #fff;
+}
+
+body {
+  font-size: .875rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+main{
+  display: none;
+}
+
+main .container{
+  background-color: #fff;
+  padding-top: 20px;
+  border-radius: 10px;
+  margin-top: 40px;
+}
+
+main.justify-content-center{
+  display: flex;
+}
+
+form input{
+  border-radius: 50px !important;
+}
+
+.btn{
+  border-radius: 50px !important;
+}
+
+#input-search{
+  height: 40px !important;
+  border-radius: 50px 0 0 50px !important;
+  border-right: none !important;
+}
+
+#input-search:focus {
+  box-shadow: 0rem 0 0.1rem rgb(0 123 255 / 15%) !important;
+}
+
+#input-search:focus ~ .input-group-text{
+  box-shadow: 0 0 0 rgb(0 123 255 / 15%) !important;
+  border-color: #80bdff !important;
+}
+
+.input-group-text:hover {
+  background-color: #dadee6 !important;
+  cursor: pointer;
+}
+
+#input-search ~ .input-group-text{
+  width: 100px;
+  justify-content: center;
+  border-radius: 0px 50px 50px 0px;
+  background-color: #fff;
+  border-left: none;
+  font-size: 24px;
+}
+
+main .fa-youtube{
+  color: #ff0000;
+  font-size: 60px;
+  margin-right: 5px;
+}
+
+header #input-search{
+  height: 40px !important;
+}
+
+#input-search ~ .input-group-text{
+  width: 60px;
+  font-size: 18px;   
+}
+
+#loader-content{
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.card{
+  height: 100%;
+  border-radius: 1rem;
+}
+
+.card .card-body p{
+  position: relative;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 3em;
+  line-height: 1em;
+  text-align: justify;
+}
+
+.card .card-body .tags{
+  position: relative;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 2em; /* (Number of lines you want visible) * (line-height) */
+  line-height: 1em;
+  text-align: justify;
+}
+
+
+.card img{
+  border-radius: 1rem 0 0 1rem; /*1rem 1rem 0 0;*/
+  height: 100%;
+  width: 100%;
+}
+
+.card .min{
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  color: #fff;
+  background-color: #010206ba;
+  padding: 3px;
+}
+
+.box {
+  display: inline-block;
+  position: relative;
+  font-size: 100px;
+  position: relative;
+  transition: .3s color, .3s border, .3s transform, .3s opacity;
+  &:hover {
+    color: #fff; //#d60b52;
+    background-color: rgba(0,0,0,.1);
+    font-size: 0;
+    padding: 0;
+    border-width: 3px;
+    line-height: 200px;
+    opacity: 1;
+    transform: scale(1.2);
+    z-index: 2;
+    [class*="loader-"] {
+      font-size: 70px;
+      line-height: 200px;
+    }
+  }
+}
+
+/*[class*="loader-"] {}*/
+#loader-content{
+  background: #fff;
+}
+
+.loader {
+  width: 1em;
+  height: 1em;
+  color: inherit;
+  vertical-align: middle;
+  pointer-events: none;  display: inline-block;
+  color: #f3c4c4;
+  border: .2em solid currentcolor;
+  border-radius: 50%;
+  animation: loader 1s ease-out infinite;
+}
+
+@keyframes loader {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@media screen and (max-width: 768px) { 
+  .card img{
+    border-radius: 1rem 1rem 0 0; /*1rem 1rem 0 0;*/
+  }
+
+  main .fa-youtube{
+    display: grid;
+    margin-top: 90px;
+  }
+
+}
