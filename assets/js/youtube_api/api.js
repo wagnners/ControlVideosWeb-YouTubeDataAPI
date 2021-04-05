@@ -2,7 +2,7 @@
 function showVideo(video, video_content){
 
 	video_content.find('.card img').attr("src", video.snippet.thumbnails.medium.url);
-	video_content.find('.card-body h5').html(video.snippet.title);
+	video_content.find('.card-body h5').html(`<a href="https://www.youtube.com/watch?v=${video.id.videoId}}" target="_blank">${video.snippet.title}</a>`);
 	video_content.find('.card-body p.card-text').html(video.snippet.description);
 	video_content.find('.card-body .tags small').html(video.snippet.tags ? video.snippet.tags.slice(0, 5).join(", ") : "");
 	video_content.find('.card-body .text-muted').html(new Date(video.snippet.publishedAt).toLocaleDateString());
