@@ -244,7 +244,7 @@ function getYoutubeResults(){
 
 // Getting access to Youtube Data API
 function loadClient() {
-	gapi.client.setApiKey("AIzaSyDj_xG3t5XJg66ztpFXnS2QpMvbABUqwyA");
+	gapi.client.setApiKey("YOUR_API_KEY");
 	return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/youtube/v3/rest")
 	    .then(function() { getYoutubeResults() },
 	        function(err) { console.error("Error loading GAPI client for API", err); });
